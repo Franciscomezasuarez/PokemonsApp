@@ -1,3 +1,4 @@
+
 export const searchPokemon = async (pokemon) => {
     try {
         let url = `https://pokeapi.co/api/v2/pokemon/${pokemon}`
@@ -23,3 +24,23 @@ export const getPokemonData = async (url) => {
         return data;
     } catch(err){}
 }
+
+export const GetPokemon = (pokemon) => async dispatch => {
+    try {
+      dispatch({
+        type: "POKEMON_MULTIPLE_LOADING"
+      });
+  
+      const res = await GetPokemon(`https://pokeapi.co/api/v2/pokemon/${pokemon}`);
+  
+      dispatch({
+        type: "POKEMON_MULTIPLE_SUCCESS",
+        payload: res.data,
+        pokemonName: pokemon
+      })
+    } catch (e) {
+      dispatch({
+        type: "POKEMON_MULTIPLE_FAIL",
+      })
+    }
+  };
