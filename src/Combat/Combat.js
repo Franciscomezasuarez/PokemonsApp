@@ -74,10 +74,16 @@ const Combat = (props) => {
 
     const damage1 = (damage) => {
         console.log(damage)
+        setDmg1(true)
+        setDmg2(false)
+        setHp2(hp2 - dmg1.base_stat)
     }
 
     const damage2 = (damage) => {
         console.log(damage)
+        setDmg1(false)
+        setDmg2(true)
+        setHp1(hp1 - dmg2.base_stat)
     }
 
 
