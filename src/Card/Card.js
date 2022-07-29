@@ -1,11 +1,12 @@
-import React from "react";
+import React, { Fragment } from "react";
 import { Link } from "react-router-dom"
 
 const Card = (props) => {
     const { pokemon } = props;
     console.log(pokemon)
     return (
-        <div className="pokemon-card">
+        <Fragment>
+         <div className="pokemon-card">
             <div className="pokemon-img">
                 <img src={pokemon.sprites.front_default} alt={pokemon.name} />
             </div>
@@ -21,13 +22,14 @@ const Card = (props) => {
                         })}
                     </div>
                     <div className="Inspeccionar">
-                    <Link to="/pokemon">
+                    <Link to={`/pokemon/${pokemon.name}`}>
                         Inspeccionar
                     </Link>
                     </div>
                 </div>
             </div>
-        </div>
+         </div>
+        </Fragment>
     );
 };
 

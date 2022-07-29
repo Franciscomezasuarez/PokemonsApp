@@ -1,79 +1,79 @@
-import { useState } from "react"
+import React, { Fragment } from "react";
+import React from "react"
+import { useDispatch, useSelector } from "react-redux";
+import { GetPokemon } from "../api";
+import _ from "lodash";
 
-function Pokemon(props) {
+const Pokemon = (props) => {
+    const pokemonName = props.match.params.pokemon;
+    const dispatch = useDispatch();
+    const pokemonState = useSelector(state => state.Pokemon);
+    React.useEffect(() => {
+      dispatch(GetPokemon(pokemonName))
+    }, []);
 
-    const [imagen, setImagen] = useState(props.sprites.front, props.sprites.back)
-
-    const handleChangeImagenFrente = () => {
-        setImagen(props.sprites.front)
-    }
-
-    const handleChangeImagenAtras = () => {
-        setImagen(props.sprites.back)
-    }
-
-    const handleChangeImagenFemenina = () => {
-        setImagen(props.sprites.female)
-    }
-
-    const handleChangeImagenShiny = () => {
-        setImagen(props.sprites.shiny)
-    }
-
-    return (
-
-        <div>
-            <h1>{props.name}</h1>
-            <img>{handleChangeImagenFrente} src={imagen} alt={props?.name} </img>
-            <img>{handleChangeImagenAtras} src={imagen} alt={props?.name} </img>
-            <h1>ID:<div>{props.id}</div></h1>
-            <h1>Peso:<div>{props?.weight}</div></h1>
-            <h1>Experiencia base:<div>{props?.baseExp}</div></h1>
-            <div>
-                <button onClick={handleChangeImagenShiny}  type="button">Shiny</button>
-                {props?.sprites.female && <button onClick={handleChangeImagenFemenina} type="button">Femenina</button>}
-            </div>
-            <div>
-                <h1>Habilidades</h1>
-                {props.abilities.map((ability, idx) =>(
-                    <div key={idx}>
-                        <button disabled type="button">{ability.ability.name}</button>
-                    </div>
-                ))}
-            </div>
-            <div>
-                <h1>Tipos</h1>
-                {props.types.map((type, idx) =>(
-                    <div key={idx}>
-                        <button disabled type="button">{type.type.name}</button>
-                    </div>
-                ))}
-            </div>
-            <div>
-                <h1>Movimientos</h1>
-                {props?.moves?.map((move, idx) =>(
-                    <div key={idx}>
-                        <button disabled type="button">{move?.move?.name}</button>
-                    </div>
-                ))}
-            </div>
-            <div>
-                <h1>Estadisticas</h1>
-                {props.stats.map((stat, idx) =>(
-                    <div key={idx}>
-                        <p>{stat.stat.name}</p>
-                        <div>
-                            <div>{`${stat.base_stat}`}</div>
+    const ShowData = () => {
+        if (!_.isEmpty(pokemonState.data[pokemonName])) {
+          const pokeData = pokemonState.data[pokemonName];
+          return(
+            <Fragment>
+              <div className={"pokemon-wrapper"}>
+                <div className={"item"}>
+                  <h1>Sprites</h1>
+                  <img src={pokeData.sprites.front_default} alt=""/>
+                  <img src={pokeData.sprites.back_default} alt=""/>
+                  <img src={pokeData.sprites.front_shiny} alt=""/>
+                  <img src={pokeData.sprites.back_shiny} alt=""/>
+                </div>
+                <div class="section-top-border">
+                  <h3 class="mb-30">Stats</h3>
+                    <div class="progress-table-wrap">
+                      <div class="progress-table">
+                        <div class="table-head">
+                          <div class="country">Name</div>
+                          <div class="visit">Base Stats</div>
                         </div>
+                        {pokeData.stats.map(el => {
+                          return (                        
+                            <div class="table-row">
+                              <div class="country">{el.stat.name}</div>
+                              <div class="visit">{el.base_stat}</div>
+                            </div>
+                          )
+                        })}
                     </div>
-                ))}
-            </div>
-        </div>
-
-    )
-
-
-}
-
+                  </div>
+                </div>
+                <div className="item">
+                  <h1>Abilities</h1>
+                  {pokeData.abilities.map(el => {
+                    return <p>{el.ability.name}</p>
+                  })}
+                </div>
+              </div>
+            </Fragment>
+          )
+        }
+    
+        if (pokemonState.loading) {
+          return <p>Loading...</p>
+        }
+    
+        if (pokemonState.errorMsg !== "") {
+          return <p>{pokemonState.errorMsg}</p>
+        }
+    
+        return <p>error getting pokemon</p>
+      }
+    
+      return(
+        <Fragment>      
+          <SimpleHeader pokemonName={pokemonName} />      
+          <div className={"container"}>
+            {ShowData()}
+          </div>
+        </Fragment>
+      )
+    };
 
 export default Pokemon
