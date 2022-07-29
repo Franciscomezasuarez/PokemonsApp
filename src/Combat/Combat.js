@@ -113,6 +113,7 @@ const Combat = (props) => {
                     <img src={imagePkmn} />
                     <br></br>
                     Vida: {hp1}
+                    
 
                     {poke1.abilities?.map((habilidad, idx) => {
                         return(
@@ -125,9 +126,6 @@ const Combat = (props) => {
 
 
             </div>
-
-
-
 
 
             <div className="pokemon2">
